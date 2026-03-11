@@ -193,10 +193,10 @@ export function Dashboard() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
         >
-          <h3 className="text-sm font-semibold text-textDark mb-2">
+          <h3 className="text-sm font-semibold text-white mb-2">
             Scope breakdown
           </h3>
-          <p className="text-[11px] text-textGray mb-3">
+          <p className="text-[11px] text-slate-400 mb-3">
             High-level view of Scope 1, 2 and 3 emissions (t CO₂e).
           </p>
           <div className="h-56">
@@ -206,11 +206,14 @@ export function Dashboard() {
                 <YAxis />
                 <Tooltip
                   contentStyle={{
+                    backgroundColor: "rgba(15, 23, 42, 0.8)",
+                    backdropFilter: "blur(12px)",
                     borderRadius: 12,
-                    border: "1px solid rgba(148, 163, 184, 0.4)",
-                    boxShadow: "0 8px 30px rgba(15, 23, 42, 0.18)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    boxShadow: "0 8px 30px rgba(0, 0, 0, 0.5)",
                     padding: "8px 10px",
                     fontSize: 11,
+                    color: "#fff",
                   }}
                 />
                 <Bar
@@ -230,10 +233,10 @@ export function Dashboard() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.4, ease: "easeOut", delay: 0.05 }}
         >
-          <h3 className="text-sm font-semibold text-textDark mb-2">
+          <h3 className="text-sm font-semibold text-white mb-2">
             Emissions by category
           </h3>
-          <p className="text-[11px] text-textGray mb-3">
+          <p className="text-[11px] text-slate-400 mb-3">
             Distribution across energy, transport, waste and water.
           </p>
           <div className="h-56 flex items-center justify-center">
@@ -256,11 +259,14 @@ export function Dashboard() {
                 </Pie>
                 <Tooltip
                   contentStyle={{
+                    backgroundColor: "rgba(15, 23, 42, 0.8)",
+                    backdropFilter: "blur(12px)",
                     borderRadius: 12,
-                    border: "1px solid rgba(148, 163, 184, 0.4)",
-                    boxShadow: "0 8px 30px rgba(15, 23, 42, 0.18)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    boxShadow: "0 8px 30px rgba(0, 0, 0, 0.5)",
                     padding: "8px 10px",
                     fontSize: 11,
+                    color: "#fff",
                   }}
                 />
                 <Legend
@@ -280,16 +286,16 @@ export function Dashboard() {
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
         >
-          <h3 className="text-sm font-semibold text-textDark mb-2">
+          <h3 className="text-sm font-semibold text-white mb-2">
             Peer benchmarking
           </h3>
-          <p className="text-[11px] text-textGray mb-4">
+          <p className="text-[11px] text-slate-400 mb-4">
             Emissions intensity (t CO₂e / employee) vs your sector.
           </p>
           <div className="space-y-2 text-[11px]">
             {peerData.map((p) => (
               <div key={p.label} className="flex items-center gap-2">
-                <div className="w-20 text-textGray">{p.label}</div>
+                <div className="w-20 text-slate-400">{p.label}</div>
                 <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
                   <div
                     className="h-full rounded-full"
@@ -299,7 +305,7 @@ export function Dashboard() {
                     }}
                   />
                 </div>
-                <div className="w-12 text-right text-textDark">
+                <div className="w-12 text-right text-white">
                   {p.value.toFixed(2)}
                 </div>
               </div>
@@ -308,13 +314,13 @@ export function Dashboard() {
           <div className="mt-4">
             <div className="relative h-6 rounded-full bg-slate-100 overflow-hidden">
               <div
-                className="absolute top-0 bottom-0 w-0.5 bg-primaryDark"
+                className="absolute top-0 bottom-0 w-0.5 bg-white"
                 style={{
                   left: `${Math.min(100, Math.max(0, companyMarkerPosition * 100))}%`,
                 }}
               />
             </div>
-            <div className="flex justify-between text-[10px] text-textGray mt-1">
+            <div className="flex justify-between text-[10px] text-slate-400 mt-1">
               <span>Low intensity</span>
               <span>Your org</span>
               <span>High intensity</span>
@@ -332,10 +338,10 @@ export function Dashboard() {
           transition={{ duration: 0.45, ease: "easeOut" }}
         >
           <div className="flex justify-between items-center mb-2">
-            <h3 className="text-sm font-semibold text-textDark">
+            <h3 className="text-sm font-semibold text-white">
               Monthly trend (CSV-derived)
             </h3>
-            <span className="text-[11px] text-textGray">
+            <span className="text-[11px] text-slate-400">
               Red dotted: industry average
             </span>
           </div>
@@ -346,11 +352,14 @@ export function Dashboard() {
                 <YAxis />
                 <Tooltip
                   contentStyle={{
+                    backgroundColor: "rgba(15, 23, 42, 0.8)",
+                    backdropFilter: "blur(12px)",
                     borderRadius: 12,
-                    border: "1px solid rgba(148, 163, 184, 0.4)",
-                    boxShadow: "0 8px 30px rgba(15, 23, 42, 0.18)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    boxShadow: "0 8px 30px rgba(0, 0, 0, 0.5)",
                     padding: "8px 10px",
                     fontSize: 11,
+                    color: "#fff",
                   }}
                 />
                 <Legend />
@@ -390,16 +399,16 @@ function SummaryCard({ label, value, helper, tone }) {
       ? "text-danger"
       : tone === "good"
       ? "text-good"
-      : "text-textDark";
+      : "text-white";
 
   return (
     <motion.div
-      className="rounded-xl border border-slate-200 bg-lightBg px-3 py-2"
+      className="rounded-xl border border-white/10 bg-slate-800/40 backdrop-blur-md px-3 py-2"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
-      <div className="text-[11px] text-textGray mb-0.5">{label}</div>
+      <div className="text-[11px] text-slate-400 mb-0.5">{label}</div>
       <motion.div
         className={`text-xs font-semibold ${toneClass} tabular-nums`}
         initial={{ opacity: 0 }}
@@ -409,7 +418,7 @@ function SummaryCard({ label, value, helper, tone }) {
         {value}
       </motion.div>
       {helper && (
-        <div className="text-[10px] text-textGray mt-0.5">{helper}</div>
+        <div className="text-[10px] text-slate-400 mt-0.5">{helper}</div>
       )}
     </motion.div>
   );
@@ -442,7 +451,7 @@ function AlertCard({ title, body, tone, index }) {
       transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.08 }}
     >
       <div className={`font-semibold ${config.text} mb-0.5`}>{title}</div>
-      <div className="text-[11px] text-textGray">{body}</div>
+      <div className="text-[11px] text-slate-400">{body}</div>
     </motion.div>
   );
 }

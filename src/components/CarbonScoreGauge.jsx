@@ -75,7 +75,7 @@ export function CarbonScoreGauge({ score = 0 }) {
         </div>
         <div className="flex items-baseline gap-2">
           <motion.span
-            className="text-4xl font-bold text-textDark tabular-nums"
+            className="text-4xl font-bold text-white tabular-nums"
           >
             {roundedScore}
           </motion.span>

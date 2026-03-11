@@ -19,7 +19,7 @@ export function Navbar() {
   const title = titleForPath(location.pathname);
 
   return (
-    <header className="w-full border-b border-slate-100/80 bg-white/80 backdrop-blur sticky top-0 z-20">
+    <header className="w-full border-b border-white/10 bg-slate-900/50 backdrop-blur-md sticky top-0 z-20 transition-colors duration-300">
       <div className="px-4 md:px-6 py-3 flex items-center justify-between">
         <div>
           <div className="text-[11px] uppercase tracking-[0.16em] text-accentLime font-semibold">
@@ -30,14 +30,14 @@ export function Navbar() {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="text-[22px] md:text-[24px] font-bold text-textDark"
+            className="text-[22px] md:text-[24px] font-bold text-white"
           >
             {title}
           </motion.div>
         </div>
         <div className="flex items-center gap-4 text-xs md:text-sm text-textGray">
           <div className="hidden sm:flex flex-col items-end">
-            <span className="font-semibold text-textDark">
+            <span className="font-semibold text-white">
               {company.name || "Demo organization"}
             </span>
             <span className="text-[11px] text-textGray">
@@ -48,10 +48,10 @@ export function Navbar() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="px-3 py-1 rounded-full bg-lightBg border border-accentLime/40 flex items-center gap-2 text-[11px] md:text-xs shadow-sm"
+            className="px-3 py-1 rounded-full bg-slate-800/60 border border-accentLime/40 flex items-center gap-2 text-[11px] md:text-xs shadow-sm backdrop-blur-md"
           >
             <span className="h-2 w-2 rounded-full bg-accentLime animate-pulse" />
-            <span className="font-semibold text-textDark">
+            <span className="font-semibold text-white">
               Score:{" "}
               {emissions.carbonScore
                 ? Math.round(emissions.carbonScore)

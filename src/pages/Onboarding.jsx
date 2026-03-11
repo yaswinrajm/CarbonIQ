@@ -48,14 +48,14 @@ export function Onboarding() {
 
   return (
     <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
-      <div className="max-w-3xl w-full bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden grid md:grid-cols-2">
-        <div className="bg-primaryDark text-white p-8 flex flex-col justify-between">
+      <div className="max-w-3xl w-full bg-slate-900/50 backdrop-blur-2xl rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-white/10 overflow-hidden grid md:grid-cols-2">
+        <div className="bg-primaryDark/80 text-white p-8 flex flex-col justify-between">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest/70 text-xs mb-4">
               <span className="h-2 w-2 rounded-full bg-accentLime animate-pulse" />
               <span>Hackathon Edition</span>
             </div>
-            <h1 className="text-2xl font-semibold leading-snug mb-3">
+            <h1 className="text-2xl font-semibold leading-snug mb-3 text-white">
               CarbonIQ – AI-Based Carbon Footprint Analyzer
             </h1>
             <p className="text-sm text-accentLime/80">
@@ -70,8 +70,8 @@ export function Onboarding() {
             <li>• Conversational AI copilot tuned to your data</li>
           </ul>
         </div>
-        <div className="p-6 md:p-8 bg-lightBg">
-          <h2 className="text-base font-semibold text-textDark mb-1">
+        <div className="p-6 md:p-8 bg-slate-800/30">
+          <h2 className="text-base font-semibold text-white mb-1">
             Organization profile
           </h2>
           <p className="text-xs text-textGray mb-5">
@@ -88,7 +88,7 @@ export function Onboarding() {
                 value={local.name}
                 onChange={handleChange("name")}
                 placeholder="Acme Technologies Ltd"
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accentLime focus:border-accentLime bg-white"
+                className="w-full rounded-lg border border-white/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accentLime focus:border-accentLime bg-slate-900/60 text-white placeholder-slate-500 backdrop-blur-md"
                 required
               />
             </div>
@@ -100,10 +100,10 @@ export function Onboarding() {
                 <select
                   value={local.industry}
                   onChange={handleChange("industry")}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-accentLime"
+                  className="w-full rounded-lg border border-white/10 px-3 py-2 text-sm bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-accentLime backdrop-blur-md"
                 >
                   {INDUSTRIES.map((i) => (
-                    <option key={i} value={i}>
+                    <option key={i} value={i} className="bg-slate-900">
                       {i}
                     </option>
                   ))}
@@ -111,15 +111,15 @@ export function Onboarding() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-textGray mb-1">
-                  Number of employees
+                  Employees
                 </label>
                 <select
                   value={local.employees}
                   onChange={handleChange("employees")}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-accentLime"
+                  className="w-full rounded-lg border border-white/10 px-3 py-2 text-sm bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-accentLime backdrop-blur-md"
                 >
                   {EMPLOYEE_BUCKETS.map((b) => (
-                    <option key={b} value={b}>
+                    <option key={b} value={b} className="bg-slate-900">
                       {b}
                     </option>
                   ))}
@@ -134,10 +134,10 @@ export function Onboarding() {
                 <select
                   value={local.country}
                   onChange={handleChange("country")}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-accentLime"
+                  className="w-full rounded-lg border border-white/10 px-3 py-2 text-sm bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-accentLime backdrop-blur-md"
                 >
                   {COUNTRIES.map((c) => (
-                    <option key={c} value={c}>
+                    <option key={c} value={c} className="bg-slate-900">
                       {c}
                     </option>
                   ))}
@@ -150,10 +150,10 @@ export function Onboarding() {
                 <select
                   value={local.year}
                   onChange={handleChange("year")}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-accentLime"
+                  className="w-full rounded-lg border border-white/10 px-3 py-2 text-sm bg-slate-900/60 text-white focus:outline-none focus:ring-2 focus:ring-accentLime backdrop-blur-md"
                 >
                   {YEARS.map((y) => (
-                    <option key={y} value={y}>
+                    <option key={y} value={y} className="bg-slate-900">
                       {y}
                     </option>
                   ))}
@@ -162,7 +162,7 @@ export function Onboarding() {
             </div>
             <button
               type="submit"
-              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accentLime text-primaryDark font-semibold py-2.5 text-sm shadow-sm hover:bg-accentLime/90 transition-colors"
+              className="mt-6 btn-gradient w-full py-2.5 text-sm"
             >
               Get started
             </button>
