@@ -4,11 +4,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import AICarbonBadge from "./components/AICarbonBadge";
+import CarbonSnapshot from "./pages/CarbonSnapshot";
 import Onboarding from "./pages/Onboarding";
 import DataInput from "./pages/DataInput";
 import Dashboard from "./pages/Dashboard";
 import AIInsights from "./pages/AIInsights";
+import BudgetPlanner from "./pages/BudgetPlanner";
 import AIChat from "./pages/AIChat";
+import PublicPage from "./pages/PublicPage";
+import CompetitiveIntelligence from "./pages/CompetitiveIntelligence";
 
 const pageTransition = {
   initial: { opacity: 0, y: 12 },
@@ -19,6 +23,11 @@ const pageTransition = {
 
 function AppShell() {
   const location = useLocation();
+
+  // CarbonSnapshot renders full-screen without sidebar/navbar
+  if (location.pathname === "/") {
+    return <CarbonSnapshot />;
+  }
 
   return (
     <div className="min-h-screen bg-transparent text-white selection:bg-accentLime/30 selection:text-white">
@@ -34,11 +43,14 @@ function AppShell() {
                 className="max-w-6xl mx-auto"
               >
                 <Routes location={location}>
-                  <Route path="/" element={<Onboarding />} />
+                  <Route path="/onboarding" element={<Onboarding />} />
                   <Route path="/input" element={<DataInput />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/insights" element={<AIInsights />} />
+                  <Route path="/competitive" element={<CompetitiveIntelligence />} />
+                  <Route path="/budget" element={<BudgetPlanner />} />
                   <Route path="/chat" element={<AIChat />} />
+                  <Route path="/public-page" element={<PublicPage />} />
                 </Routes>
               </motion.div>
             </AnimatePresence>
@@ -51,4 +63,3 @@ function AppShell() {
 }
 
 export default AppShell;
-

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAppContext } from "../context";
 
 const INDUSTRIES = [
@@ -33,8 +33,10 @@ const YEARS = ["2022", "2023", "2024"];
 
 export function Onboarding() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { company, setCompany } = useAppContext();
   const [local, setLocal] = useState(company);
+  const isPrefilled = location.state?.prefilled;
 
   const handleChange = (field) => (e) => {
     setLocal((prev) => ({ ...prev, [field]: e.target.value }));
@@ -70,8 +72,21 @@ export function Onboarding() {
             <li>• Conversational AI copilot tuned to your data</li>
           </ul>
         </div>
+<<<<<<< HEAD
         <div className="p-6 md:p-8 bg-slate-800/30">
           <h2 className="text-base font-semibold text-white mb-1">
+=======
+        <div className="p-6 md:p-8 bg-lightBg flex flex-col justify-center">
+          {isPrefilled && (
+            <div className="bg-accentLime/10 text-primaryDark px-4 py-3 rounded-xl text-sm mb-6 border border-accentLime border-opacity-50 flex items-start gap-3">
+              <span className="text-xl">✨</span>
+              <p className="leading-relaxed">
+                <strong>We've pre-filled what we know from your snapshot</strong> — just verify and complete the remaining fields to get your audit-ready report.
+              </p>
+            </div>
+          )}
+          <h2 className="text-base font-semibold text-textDark mb-1">
+>>>>>>> 594f3d7ccaddcb0181611883f94f40e678fb8074
             Organization profile
           </h2>
           <p className="text-xs text-textGray mb-5">

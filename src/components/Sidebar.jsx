@@ -4,11 +4,14 @@ import { motion } from "framer-motion";
 import { useAppContext } from "../context";
 
 const navItems = [
-  { to: "/", label: "Overview" },
+  { to: "/onboarding", label: "Overview" },
   { to: "/input", label: "Data Input" },
   { to: "/dashboard", label: "Dashboard" },
   { to: "/insights", label: "AI Insights" },
+  { to: "/competitive", label: "🏆 Competitors" },
+  { to: "/budget", label: "💰 Budget Planner" },
   { to: "/chat", label: "AI Chat" },
+  { to: "/public-page", label: "🌍 Public Page" },
 ];
 
 export function Sidebar() {
