@@ -17,6 +17,7 @@ import {
 import { useAppContext } from "../context";
 import CarbonScoreGauge from "../components/CarbonScoreGauge";
 import WhatIfSimulator from "../components/WhatIfSimulator";
+import PredictiveForecasting from "../components/PredictiveForecasting";
 import { normalizeEmployees } from "../utils/calculations";
 
 const PIE_COLORS = ["#4A8C4B", "#22C55E", "#F59E0B", "#0EA5E9"];
@@ -375,6 +376,8 @@ export function Dashboard() {
           </div>
         </motion.div>
       )}
+
+      <PredictiveForecasting />
 
       <WhatIfSimulator />
     </div>

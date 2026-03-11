@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
+import AICarbonBadge from "./components/AICarbonBadge";
 import Onboarding from "./pages/Onboarding";
 import DataInput from "./pages/DataInput";
 import Dashboard from "./pages/Dashboard";
@@ -44,6 +45,7 @@ function AppShell() {
           </main>
         </div>
       </div>
+      <AICarbonBadge />
     </div>
   );
 }

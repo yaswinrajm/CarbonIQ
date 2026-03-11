@@ -1,14 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { useAppContext } from "../context";
 import { analyzeEmissions } from "../utils/geminiAPI";
 import { generateCarbonReportPDF } from "../utils/pdfGenerator";
+import { subscribe, getSnapshot } from "../utils/carbonOfAI";
+
+function useAICarbonSnapshot() {
+  const [snap, setSnap] = useState(getSnapshot);
+  useEffect(() => subscribe((s) => setSnap(s)), []);
+  return snap;
+}
 
 export function AIInsights() {
   const { emissions, company } = useAppContext();
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const carbonSnap = useAICarbonSnapshot();
 
   const hasData = (emissions.totalTonnes || 0) > 0;
 
@@ -45,6 +61,19 @@ export function AIInsights() {
     if (!insights) return;
     generateCarbonReportPDF(company, emissions, insights);
   };
+
+  // Aggregate carbon by operation type for the bar chart
+  const carbonByOp = {};
+  carbonSnap.entries.forEach((e) => {
+    if (!carbonByOp[e.operation]) {
+      carbonByOp[e.operation] = { name: e.operation, grams: 0, count: 0 };
+    }
+    carbonByOp[e.operation].grams += e.carbonGrams;
+    carbonByOp[e.operation].count += 1;
+  });
+  const carbonChartData = Object.values(carbonByOp).sort(
+    (a, b) => b.grams - a.grams
+  );
 
   if (!hasData) {
     return (
@@ -218,9 +247,110 @@ export function AIInsights() {
           </motion.div>
         </>
       )}
+
+      {/* ═══════════════════════════════════════════════════════════
+          🤖 Carbon Cost of This Analysis
+         ═══════════════════════════════════════════════════════════ */}
+      {carbonSnap.entries.length > 0 && (
+        <motion.div
+          className="card-premium p-5"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h3 className="text-sm md:text-base font-semibold text-textDark">
+                🤖 Carbon Cost of This Analysis
+              </h3>
+              <p className="text-[11px] text-textGray mt-0.5">
+                Every AI call consumes energy. Here's the carbon footprint of
+                your CarbonIQ session.
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="text-lg font-bold text-textDark tabular-nums">
+                {carbonSnap.totalGrams.toFixed(4)}g
+              </div>
+              <div className="text-[10px] text-textGray">Total CO₂e</div>
+            </div>
+          </div>
+
+          {/* Bar chart of carbon by operation */}
+          {carbonChartData.length > 0 && (
+            <div className="h-44 mb-4">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={carbonChartData}
+                  layout="vertical"
+                  margin={{ left: 10, right: 10, top: 0, bottom: 0 }}
+                >
+                  <XAxis
+                    type="number"
+                    tick={{ fontSize: 10 }}
+                    tickFormatter={(v) => `${v.toFixed(4)}g`}
+                  />
+                  <YAxis
+                    dataKey="name"
+                    type="category"
+                    tick={{ fontSize: 10 }}
+                    width={130}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: 12,
+                      border: "1px solid rgba(148,163,184,0.4)",
+                      boxShadow: "0 8px 30px rgba(15,23,42,0.18)",
+                      padding: "8px 12px",
+                      fontSize: 11,
+                    }}
+                    formatter={(val) => [`${val.toFixed(6)}g CO₂e`]}
+                  />
+                  <Bar
+                    dataKey="grams"
+                    fill="#97BC62"
+                    radius={[0, 6, 6, 0]}
+                    animationDuration={600}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+
+          {/* Breakdown list */}
+          <div className="grid md:grid-cols-2 gap-3 text-[11px]">
+            {carbonSnap.entries.map((e) => (
+              <div
+                key={e.id}
+                className="flex items-center justify-between rounded-lg border border-slate-100 bg-lightBg px-3 py-1.5"
+              >
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 rounded-full bg-accentLime" />
+                  <span className="text-textDark font-medium">
+                    {e.operation}
+                  </span>
+                </div>
+                <div className="text-textGray tabular-nums">
+                  {e.carbonGrams.toFixed(4)}g • {e.durationSec.toFixed(1)}s
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Equivalence footer */}
+          <div className="mt-3 flex items-center gap-2 text-[11px] text-textGray">
+            <span className="text-sm">💡</span>
+            Equivalent to{" "}
+            <span className="font-semibold text-textDark">
+              {(carbonSnap.ledSecondsUser || 0).toFixed(1)} seconds
+            </span>{" "}
+            of LED bulb usage
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }
 
 export default AIInsights;
-
