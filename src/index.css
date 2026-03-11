@@ -5,28 +5,31 @@
 @tailwind utilities;
 
 body {
-  @apply m-0 bg-lightBg text-textDark;
+  @apply m-0 bg-primaryDark text-white bg-fixed;
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
+  background-image: radial-gradient(circle at 15% 50%, rgba(6, 78, 59, 0.15), transparent 25%),
+                    radial-gradient(circle at 85% 30%, rgba(52, 211, 153, 0.1), transparent 25%);
 }
 
 @layer components {
   .card-premium {
-    @apply bg-white rounded-2xl border border-slate-100/80 shadow-[0_4px_24px_rgba(0,0,0,0.08)] transition-transform transition-shadow duration-300;
+    @apply bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] transition-all duration-300;
   }
 
   .card-premium:hover {
-    @apply -translate-y-0.5 shadow-[0_10px_40px_rgba(0,0,0,0.12)];
+    @apply -translate-y-1 shadow-[0_12px_48px_rgba(0,0,0,0.5)] border-white/20 bg-slate-800/50;
   }
 
   .btn-gradient {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white shadow-md transition duration-200;
-    background-image: linear-gradient(135deg, #2c5f2d, #4a8c4b);
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white shadow-[0_4px_14px_0_rgba(5,150,105,0.39)] transition-all duration-300 backdrop-blur-md border border-white/10;
+    background-image: linear-gradient(135deg, rgba(6, 78, 59, 0.8), rgba(5, 150, 105, 0.8));
   }
 
   .btn-gradient:hover {
-    @apply shadow-lg;
-    transform: translateY(-1px);
+    @apply shadow-[0_6px_20px_rgba(5,150,105,0.23)] border-white/20;
+    transform: translateY(-2px);
+    background-image: linear-gradient(135deg, rgba(6, 78, 59, 0.9), rgba(5, 150, 105, 0.9));
   }
 
   .btn-gradient:active {
@@ -38,30 +41,42 @@ body {
     width: 100%;
     height: 8px;
     border-radius: 9999px;
-    background: #d1fae5;
+    background: rgba(255, 255, 255, 0.1);
     outline: none;
+    backdrop-filter: blur(4px);
   }
 
   .slider-premium::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 9999px;
-    background: #22c55e;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background: #34D399;
+    box-shadow: 0 0 15px rgba(52, 211, 153, 0.5);
     cursor: pointer;
     border: 2px solid white;
+    transition: all 0.2s ease;
+  }
+  
+  .slider-premium::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(52, 211, 153, 0.7);
   }
 
   .slider-premium::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 9999px;
-    background: #22c55e;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background: #34D399;
+    box-shadow: 0 0 15px rgba(52, 211, 153, 0.5);
     cursor: pointer;
     border: 2px solid white;
+    transition: all 0.2s ease;
+  }
+  
+  .slider-premium::-moz-range-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(52, 211, 153, 0.7);
   }
 }
-

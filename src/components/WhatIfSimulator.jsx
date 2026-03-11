@@ -84,17 +84,17 @@ export function WhatIfSimulator() {
     >
       <div className="flex items-center justify-between mb-4 gap-3">
         <div>
-          <h2 className="text-base md:text-lg font-semibold text-textDark">
+          <h2 className="text-base md:text-lg font-semibold text-white">
             🎮 What-If Scenario Simulator
           </h2>
-          <p className="text-xs md:text-sm text-textGray">
+          <p className="text-xs md:text-sm text-slate-400">
             Drag the sliders to simulate decarbonization scenarios in real time.
           </p>
         </div>
         <button
           type="button"
           onClick={handleReset}
-          className="text-[11px] md:text-xs px-3 py-1.5 rounded-full border border-slate-200 text-textGray hover:border-accentLime hover:text-textDark bg-lightBg transition-colors"
+          className="text-[11px] md:text-xs px-3 py-1.5 rounded-full border border-white/10 text-slate-400 hover:border-accentLime hover:text-white bg-slate-800/40 backdrop-blur-md transition-colors"
         >
           Reset scenario
         </button>
@@ -180,7 +180,7 @@ function Slider({ label, value, max, suffix, onChange }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-1">
-        <div className="text-xs font-medium text-textDark">{label}</div>
+        <div className="text-xs font-medium text-white">{label}</div>
         <div className="text-xs text-accentLime font-semibold">
           {value}
           {suffix}
@@ -194,7 +194,7 @@ function Slider({ label, value, max, suffix, onChange }) {
         onChange={onChange}
         className="slider-premium"
       />
-      <div className="flex justify-between text-[10px] text-textGray mt-1">
+      <div className="flex justify-between text-[10px] text-slate-400 mt-1">
         <span>0{suffix}</span>
         <span>
           {max}
@@ -207,16 +207,16 @@ function Slider({ label, value, max, suffix, onChange }) {
 function StatCard({ label, value, positive, highlight }) {
   return (
     <div
-      className={`rounded-xl px-3 py-2 border bg-lightBg transition-colors ${
+      className={`rounded-xl px-3 py-2 border bg-slate-800/40 backdrop-blur-md transition-colors ${
         highlight
           ? "border-amber-300 bg-amber-50 shadow-[0_0_0_1px_rgba(250,204,21,0.4)]"
-          : "border-slate-200"
+          : "border-white/10"
       }`}
     >
-      <div className="text-[11px] text-textGray mb-0.5">{label}</div>
+      <div className="text-[11px] text-slate-400 mb-0.5">{label}</div>
       <div
         className={`text-xs font-semibold ${
-          positive ? "text-good" : "text-textDark"
+          positive ? "text-good" : "text-white"
         }`}
       >
         {value}

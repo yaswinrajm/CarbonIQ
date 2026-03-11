@@ -55,10 +55,10 @@ export default function AICarbonBadge() {
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 4 }}
-                className="absolute bottom-full left-0 mb-2 px-3 py-1.5 rounded-lg bg-slate-800 text-white text-[10px] whitespace-nowrap shadow-lg"
+                className="absolute bottom-full left-0 mb-2 px-3 py-1.5 rounded-lg bg-slate-800/80 backdrop-blur-md text-white text-[10px] border border-white/10 whitespace-nowrap shadow-lg"
               >
                 CarbonIQ measures its own AI carbon footprint — because every byte counts.
-                <div className="absolute bottom-0 left-4 translate-y-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-slate-800" />
+                <div className="absolute bottom-0 left-4 translate-y-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-slate-800/80" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -69,10 +69,9 @@ export default function AICarbonBadge() {
             onClick={() => setExpanded(!expanded)}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
-            className="inline-flex items-center gap-2 shadow-lg text-xs font-medium transition-all duration-200"
+            className="inline-flex items-center gap-2 shadow-lg text-xs font-medium transition-all duration-200 bg-slate-900/60 backdrop-blur-md"
             style={{
-              backgroundColor: "#1A2E1A",
-              border: "1.5px solid #97BC62",
+              border: "1.5px solid #34D399",
               borderRadius: 20,
               padding: "8px 16px",
             }}
@@ -96,18 +95,18 @@ export default function AICarbonBadge() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.95 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="absolute bottom-12 left-0 w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
+              className="absolute bottom-12 left-0 w-80 bg-slate-900/80 backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-white/10 overflow-hidden"
             >
               {/* Header */}
-              <div className="px-4 py-3 border-b border-slate-100 bg-gradient-to-r from-emerald-50 to-white">
+              <div className="px-4 py-3 border-b border-white/10 bg-slate-800/50">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-semibold text-textDark flex items-center gap-1.5">
+                  <h4 className="text-xs font-semibold text-white flex items-center gap-1.5">
                     🌱 AI Session Carbon Footprint
                   </h4>
                   <button
                     type="button"
                     onClick={() => setExpanded(false)}
-                    className="text-textGray hover:text-textDark text-sm"
+                    className="text-slate-400 hover:text-white text-sm"
                   >
                     ✕
                   </button>
@@ -117,7 +116,7 @@ export default function AICarbonBadge() {
               {/* Operation breakdown */}
               <div className="px-4 py-3 max-h-52 overflow-y-auto">
                 {snapshot.entries.length === 0 ? (
-                  <p className="text-[11px] text-textGray italic">
+                  <p className="text-[11px] text-slate-500 italic">
                     No AI operations yet this session.
                   </p>
                 ) : (
@@ -129,11 +128,11 @@ export default function AICarbonBadge() {
                       >
                         <div className="flex items-center gap-2">
                           <div className="h-1.5 w-1.5 rounded-full bg-accentLime" />
-                          <span className="text-textDark font-medium">
+                          <span className="text-slate-200 font-medium">
                             {e.operation}
                           </span>
                         </div>
-                        <span className="text-textGray tabular-nums">
+                        <span className="text-slate-400 tabular-nums">
                           {e.carbonGrams.toFixed(4)}g
                         </span>
                       </div>
@@ -143,16 +142,16 @@ export default function AICarbonBadge() {
               </div>
 
               {/* Summary */}
-              <div className="px-4 py-3 border-t border-slate-100 bg-slate-50/60">
+              <div className="px-4 py-3 border-t border-white/10 bg-slate-800/60">
                 <div className="flex justify-between text-[11px] mb-1">
-                  <span className="text-textGray">Total session carbon</span>
-                  <span className="font-bold text-textDark tabular-nums">
+                  <span className="text-slate-400">Total session carbon</span>
+                  <span className="font-bold text-white tabular-nums">
                     {snapshot.totalGrams.toFixed(4)}g CO₂e
                   </span>
                 </div>
                 <div className="flex justify-between text-[11px]">
-                  <span className="text-textGray">Equivalent to</span>
-                  <span className="font-medium text-textDark">
+                  <span className="text-slate-400">Equivalent to</span>
+                  <span className="font-medium text-white">
                     {snapshot.ledSecondsUser?.toFixed?.(1) || "0.0"} seconds of LED bulb usage
                   </span>
                 </div>

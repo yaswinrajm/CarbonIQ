@@ -255,10 +255,10 @@ export default function PredictiveForecasting() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
         <div>
-          <h3 className="text-sm md:text-base font-semibold text-textDark">
+          <h3 className="text-sm md:text-base font-semibold text-white">
             📈 Predictive Emissions Forecast — Next 12 Months
           </h3>
-          <p className="text-[11px] text-textGray mt-0.5">
+          <p className="text-[11px] text-slate-400 mt-0.5">
             Machine learning model trained on your historical data.
           </p>
         </div>
@@ -266,13 +266,13 @@ export default function PredictiveForecasting() {
           <button
             type="button"
             onClick={() => setShowTooltip(!showTooltip)}
-            className="text-[10px] text-textGray border border-slate-200 rounded-full px-2 py-0.5 hover:bg-slate-50 transition-colors"
+            className="text-[10px] text-slate-400 border border-white/10 rounded-full px-2 py-0.5 hover:bg-slate-800/50 transition-colors"
           >
             ℹ️ How it works
           </button>
           {showTooltip && (
             <motion.div
-              className="absolute right-0 top-7 z-20 w-72 bg-white border border-slate-200 rounded-xl shadow-xl p-3 text-[11px] text-textGray leading-relaxed"
+              className="absolute right-0 top-7 z-20 w-72 bg-slate-900/90 backdrop-blur-md border border-white/10 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] p-3 text-[11px] text-slate-300 leading-relaxed"
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
             >
@@ -319,11 +319,14 @@ export default function PredictiveForecasting() {
               <YAxis tick={{ fontSize: 10 }} />
               <Tooltip
                 contentStyle={{
+                  backgroundColor: "rgba(15, 23, 42, 0.8)",
+                  backdropFilter: "blur(12px)",
                   borderRadius: 12,
-                  border: "1px solid rgba(148,163,184,0.4)",
-                  boxShadow: "0 8px 30px rgba(15,23,42,0.18)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
                   padding: "8px 12px",
                   fontSize: 11,
+                  color: "#fff",
                 }}
                 formatter={(val) => [`${val.toFixed(2)} t CO₂e`]}
               />
@@ -363,7 +366,7 @@ export default function PredictiveForecasting() {
                 type="monotone"
                 dataKey="ciLower"
                 stroke="none"
-                fill="#ffffff"
+                fill="transparent"
                 name="ci_lower_hidden"
                 legendType="none"
               />
@@ -420,7 +423,7 @@ export default function PredictiveForecasting() {
           {scenarios.map((s, idx) => (
             <motion.div
               key={s.name}
-              className="rounded-xl border border-slate-200 p-4 bg-white"
+              className="rounded-xl border border-white/10 p-4 bg-slate-800/40 backdrop-blur-sm"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -432,7 +435,7 @@ export default function PredictiveForecasting() {
                     className="h-2.5 w-2.5 rounded-full"
                     style={{ backgroundColor: s.color }}
                   />
-                  <span className="text-xs font-semibold text-textDark">
+                  <span className="text-xs font-semibold text-white">
                     {s.name}
                   </span>
                 </div>
@@ -443,16 +446,16 @@ export default function PredictiveForecasting() {
                 </span>
               </div>
 
-              <div className="text-lg font-bold text-textDark tabular-nums">
+              <div className="text-lg font-bold text-white tabular-nums">
                 {s.month12.toFixed(2)}{" "}
-                <span className="text-xs font-normal text-textGray">
+                <span className="text-xs font-normal text-slate-400">
                   t / month
                 </span>
               </div>
 
               <div className="mt-1.5 space-y-0.5 text-[11px]">
                 <div className="flex justify-between">
-                  <span className="text-textGray">vs. today</span>
+                  <span className="text-slate-400">vs. today</span>
                   <span
                     className={`font-semibold ${
                       s.reduction > 0 ? "text-danger" : "text-good"
@@ -463,8 +466,8 @@ export default function PredictiveForecasting() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-textGray">Est. cost saving</span>
-                  <span className="font-semibold text-textDark">
+                  <span className="text-slate-400">Est. cost saving</span>
+                  <span className="font-semibold text-white">
                     {s.costSaving > 0
                       ? `$${s.costSaving.toLocaleString(undefined, {
                           maximumFractionDigits: 0,
