@@ -101,9 +101,20 @@ export function CarbonScoreGauge({ score = 0 }) {
         <div 
           className="absolute bottom-[-16px] left-0 w-full text-center flex items-baseline justify-center"
         >
-          <span style={{ fontSize: "48pt", fontWeight: "800", color, lineHeight: "1", letterSpacing: "-0.05em" }}>
-            {displayScore}
-          </span>
+          <div className="flex flex-col items-center">
+            <div className="flex items-baseline gap-1">
+              <span className="text-4xl font-bold text-white tabular-nums">
+                {displayScore}
+              </span>
+              <span className="text-sm text-slate-400">/ 100</span>
+            </div>
+            <div 
+              className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider mt-1"
+              style={{ backgroundColor: `${color}20`, color }}
+            >
+              Grade {grade}
+            </div>
+          </div>
         </div>
       </div>
 

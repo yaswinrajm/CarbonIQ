@@ -30,7 +30,7 @@ function AppShell() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F4F9F0] via-[#f5faf4] to-[#e8f2e4] text-textDark">
+    <div className="min-h-screen bg-transparent text-white selection:bg-accentLime/30 selection:text-white">
       <div className="flex">
         <Sidebar />
         <div className="flex-1 flex flex-col min-h-screen">

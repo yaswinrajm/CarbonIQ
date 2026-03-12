@@ -83,10 +83,10 @@ export function AIInsights() {
   if (!hasData) {
     return (
       <div className="p-6">
-        <div className="max-w-md mx-auto card-premium p-5 text-sm text-textGray">
+        <div className="max-w-md mx-auto card-premium p-5 text-sm text-slate-400">
           Run a baseline first via the{" "}
-          <span className="font-semibold text-textDark">Data Input</span> and{" "}
-          <span className="font-semibold text-textDark">Dashboard</span> pages,
+          <span className="font-semibold text-white">Data Input</span> and{" "}
+          <span className="font-semibold text-white">Dashboard</span> pages,
           then return here for an AI-generated roadmap, benchmarking and risk
           view.
         </div>
@@ -98,10 +98,10 @@ export function AIInsights() {
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-textDark">
+          <h2 className="text-lg font-semibold text-white">
             AI-generated decarbonization plan
           </h2>
-          <p className="text-xs md:text-sm text-textGray">
+          <p className="text-xs md:text-sm text-slate-400">
             Gemini analyzes your footprint and industry to propose a pragmatic
             12-month roadmap and top actions.
           </p>
@@ -118,7 +118,7 @@ export function AIInsights() {
 
       {loading && (
         <motion.div
-          className="card-premium p-6 flex items-center gap-3 text-sm text-textGray"
+          className="card-premium p-6 flex items-center gap-3 text-sm text-slate-400"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -175,10 +175,10 @@ export function AIInsights() {
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
             >
-              <h3 className="text-sm font-semibold text-textDark mb-1">
+              <h3 className="text-sm font-semibold text-white mb-1">
                 12-month carbon reduction roadmap
               </h3>
-              <p className="text-[11px] text-textGray mb-4">
+              <p className="text-[11px] text-slate-400 mb-4">
                 Each milestone combines abatement potential, cost and
                 implementation difficulty.
               </p>
@@ -267,24 +267,24 @@ export function AIInsights() {
                 viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.4, ease: "easeOut", delay: 0.05 }}
               >
-                <h3 className="text-sm font-semibold text-textDark mb-2">
+                <h3 className="text-sm font-semibold text-white mb-2">
                   Top 3 recommendations
                 </h3>
                 <div className="space-y-3 text-xs md:text-sm">
                   {insights.top3_recommendations?.map((rec, idx) => (
                     <div
                       key={rec.title}
-                      className="rounded-xl border border-slate-200 bg-lightBg px-3 py-2"
+                      className="rounded-xl border border-white/10 bg-slate-800/40 backdrop-blur-md px-3 py-2"
                     >
                       <div className="flex justify-between items-center mb-1">
-                        <div className="font-semibold text-textDark">
+                        <div className="font-semibold text-white">
                           {idx + 1}. {rec.title}
                         </div>
                         <div className="text-[10px] text-good font-semibold">
                           {rec.savingTonnes || rec.saving_tonnes} t • ${Number(rec.costSavingUSD || rec.cost_saving).toLocaleString()}
                         </div>
                       </div>
-                      <p className="text-[11px] text-textGray">
+                      <p className="text-[11px] text-slate-400">
                         {rec.description}
                       </p>
                     </div>
@@ -298,16 +298,16 @@ export function AIInsights() {
                 viewport={{ once: true, amount: 0.5 }}
                 transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
               >
-                <h3 className="text-sm font-semibold text-textDark mb-1">
+                <h3 className="text-sm font-semibold text-white mb-1">
                   Risk assessment
                 </h3>
-                <p className="text-[11px] text-textGray mb-2">
+                <p className="text-[11px] text-slate-400 mb-2">
                   Qualitative view on regulatory and transition risk.
                 </p>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-warning/5 border border-warning/40 text-xs font-semibold text-warning mb-2">
                   Risk score: {insights.risk_score}
                 </div>
-                <p className="text-[11px] text-textGray">
+                <p className="text-[11px] text-slate-400">
                   {insights.risk_explanation}
                 </p>
               </motion.div>
@@ -320,13 +320,13 @@ export function AIInsights() {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
           >
-            <h3 className="text-sm font-semibold text-textDark mb-1">
+            <h3 className="text-sm font-semibold text-white mb-1">
               Industry benchmark analysis
             </h3>
-            <p className="text-[11px] text-textGray mb-2">
+            <p className="text-[11px] text-slate-400 mb-2">
               How your intensity compares to peers and what that implies.
             </p>
-            <p className="text-[11px] text-textDark leading-relaxed">
+            <p className="text-[11px] text-white leading-relaxed">
               {insights.industry_benchmark_analysis}
             </p>
           </motion.div>
@@ -347,19 +347,19 @@ export function AIInsights() {
         >
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="text-sm md:text-base font-semibold text-textDark">
+              <h3 className="text-sm md:text-base font-semibold text-white">
                 🤖 Carbon Cost of This Analysis
               </h3>
-              <p className="text-[11px] text-textGray mt-0.5">
+              <p className="text-[11px] text-slate-400 mt-0.5">
                 Every AI call consumes energy. Here's the carbon footprint of
                 your CarbonIQ session.
               </p>
             </div>
             <div className="text-right">
-              <div className="text-lg font-bold text-textDark tabular-nums">
+              <div className="text-lg font-bold text-white tabular-nums">
                 {carbonSnap.totalGrams.toFixed(4)}g
               </div>
-              <div className="text-[10px] text-textGray">Total CO₂e</div>
+              <div className="text-[10px] text-slate-400">Total CO₂e</div>
             </div>
           </div>
 
@@ -385,11 +385,14 @@ export function AIInsights() {
                   />
                   <Tooltip
                     contentStyle={{
+                      backgroundColor: "rgba(15, 23, 42, 0.8)",
+                      backdropFilter: "blur(12px)",
                       borderRadius: 12,
-                      border: "1px solid rgba(148,163,184,0.4)",
-                      boxShadow: "0 8px 30px rgba(15,23,42,0.18)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
                       padding: "8px 12px",
                       fontSize: 11,
+                      color: "#fff"
                     }}
                     formatter={(val) => [`${val.toFixed(6)}g CO₂e`]}
                   />
@@ -409,15 +412,15 @@ export function AIInsights() {
             {carbonSnap.entries.map((e) => (
               <div
                 key={e.id}
-                className="flex items-center justify-between rounded-lg border border-slate-100 bg-lightBg px-3 py-1.5"
+                className="flex items-center justify-between rounded-lg border border-white/5 bg-slate-800/40 backdrop-blur-md px-3 py-1.5"
               >
                 <div className="flex items-center gap-2">
                   <div className="h-1.5 w-1.5 rounded-full bg-accentLime" />
-                  <span className="text-textDark font-medium">
+                  <span className="text-white font-medium">
                     {e.operation}
                   </span>
                 </div>
-                <div className="text-textGray tabular-nums">
+                <div className="text-slate-400 tabular-nums">
                   {e.carbonGrams.toFixed(4)}g • {e.durationSec.toFixed(1)}s
                 </div>
               </div>
@@ -425,10 +428,10 @@ export function AIInsights() {
           </div>
 
           {/* Equivalence footer */}
-          <div className="mt-3 flex items-center gap-2 text-[11px] text-textGray">
+          <div className="mt-3 flex items-center gap-2 text-[11px] text-slate-400">
             <span className="text-sm">💡</span>
             Equivalent to{" "}
-            <span className="font-semibold text-textDark">
+            <span className="font-semibold text-white">
               {(carbonSnap.ledSecondsUser || 0).toFixed(1)} seconds
             </span>{" "}
             of LED bulb usage

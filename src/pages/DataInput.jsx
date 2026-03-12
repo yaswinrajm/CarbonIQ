@@ -151,7 +151,7 @@ export function DataInput() {
       {/* ── Page Title with AI-Powered badge ── */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-textDark inline-flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-white inline-flex items-center gap-2">
             Input your activity data
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
               style={{ backgroundColor: "#97BC6220", color: "#97BC62" }}>
@@ -166,7 +166,7 @@ export function DataInput() {
         <button
           type="button"
           onClick={handleDemo}
-          className="inline-flex items-center gap-2 text-xs md:text-sm rounded-full border border-accentLime/70 px-3 py-1.5 bg-white hover:bg-lightBg text-primaryDark font-semibold"
+          className="inline-flex items-center gap-2 text-xs md:text-sm rounded-full border border-accentLime/70 px-3 py-1.5 bg-slate-800/60 hover:bg-slate-700/60 text-white font-semibold backdrop-blur-md transition-colors"
         >
           Use sample demo data
         </button>
@@ -268,17 +268,17 @@ export function DataInput() {
       </div>
 
       {/* ── Tab panel ── */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200">
-        <div className="border-b border-slate-200 flex overflow-x-auto">
+      <div className="bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-lg border border-white/10 overflow-hidden">
+        <div className="border-b border-white/10 flex overflow-x-auto">
           {TABS.map((tab) => (
             <button
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`px-4 md:px-6 py-3 text-xs md:text-sm font-medium whitespace-nowrap border-b-2 ${
+              className={`px-4 md:px-6 py-3 text-xs md:text-sm font-medium whitespace-nowrap border-b-2 transition-colors duration-300 ${
                 activeTab === tab
-                  ? "border-accentLime text-primaryDark bg-lightBg"
-                  : "border-transparent text-textGray hover:text-textDark"
+                  ? "border-accentLime text-white bg-slate-800/50"
+                  : "border-transparent text-slate-400 hover:text-white hover:bg-slate-800/30"
               }`}
             >
               {tab}
@@ -312,7 +312,7 @@ export function DataInput() {
         <button
           type="button"
           onClick={handleCalculate}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-mediumGreen text-white text-sm font-semibold shadow-sm hover:bg-forest"
+          className="btn-gradient px-6 py-2.5 shadow-lg"
         >
           Calculate footprint & view dashboard
         </button>
@@ -335,14 +335,14 @@ function Field({ label, suffix, fieldKey, flashingFields, ...rest }) {
       <div className="flex items-center gap-2">
         <input
           {...rest}
-          className={`w-full rounded-lg border px-3 py-2 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-accentLime bg-white transition-all duration-300 ${
+          className={`w-full rounded-lg border px-3 py-2 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-accentLime bg-slate-900/60 text-white placeholder-slate-500 backdrop-blur-sm transition-all duration-300 ${
             isFlashing
-              ? "border-accentLime ring-2 ring-accentLime/50 bg-accentLime/10 shadow-[0_0_12px_rgba(151,188,98,0.35)]"
-              : "border-slate-200"
+              ? "border-accentLime ring-2 ring-accentLime/50 bg-accentLime/20 shadow-[0_0_12px_rgba(151,188,98,0.5)]"
+              : "border-white/10"
           }`}
         />
         {suffix && (
-          <span className="text-[11px] md:text-xs text-textGray">{suffix}</span>
+          <span className="text-[11px] md:text-xs text-textGray whitespace-nowrap">{suffix}</span>
         )}
       </div>
     </div>
@@ -516,8 +516,8 @@ function SupplyChainTab() {
   return (
     <div className="space-y-5">
       {/* Header explainer */}
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-        <p className="text-xs md:text-sm text-textDark leading-relaxed">
+      <div className="rounded-xl border border-white/10 bg-slate-800/40 backdrop-blur-md p-4 mb-4">
+        <p className="text-xs md:text-sm text-slate-200 leading-relaxed">
           <span className="font-semibold">Scope 3 emissions from your supply chain are typically 70% of a company's total footprint.</span>{" "}
           Enter your annual spending by category and we estimate the associated emissions using EEIO emission factors.
         </p>
@@ -546,8 +546,8 @@ function SupplyChainTab() {
                 transition={{ duration: 0.25 }}
                 className={`grid grid-cols-1 md:grid-cols-12 gap-3 items-center rounded-xl border px-3 py-2.5 transition-colors ${
                   isTop3
-                    ? "border-amber-300 bg-amber-50/60"
-                    : "border-slate-200 bg-white"
+                    ? "border-amber-400/50 bg-amber-900/30"
+                    : "border-white/10 bg-slate-900/40"
                 }`}
               >
                 {/* Category */}
@@ -555,10 +555,10 @@ function SupplyChainTab() {
                   <select
                     value={row.category}
                     onChange={handleCategoryChange(row.id)}
-                    className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs md:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-accentLime"
+                    className="w-full rounded-lg border border-white/10 px-2 py-1.5 text-xs md:text-sm bg-slate-800/80 text-white focus:outline-none focus:ring-2 focus:ring-accentLime backdrop-blur-sm"
                   >
                     {SUPPLY_CATEGORIES.map((c) => (
-                      <option key={c} value={c}>{c}</option>
+                      <option key={c} value={c} className="bg-slate-900 text-white">{c}</option>
                     ))}
                   </select>
                 </div>
@@ -573,7 +573,7 @@ function SupplyChainTab() {
                       value={row.spend || ""}
                       onChange={handleSpendChange(row.id)}
                       placeholder="0"
-                      className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-accentLime bg-white"
+                      className="w-full rounded-lg border border-white/10 px-2 py-1.5 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-accentLime bg-slate-800/80 text-white placeholder-slate-500 backdrop-blur-sm"
                     />
                   </div>
                 </div>
@@ -622,7 +622,7 @@ function SupplyChainTab() {
 
       {/* ── Summary Card ── */}
       <motion.div
-        className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50/80 p-5 shadow-sm"
+        className="rounded-2xl border border-white/10 bg-slate-900/50 backdrop-blur-xl p-5 shadow-lg shadow-black/20"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35 }}
@@ -632,7 +632,7 @@ function SupplyChainTab() {
             <div className="text-[11px] uppercase tracking-wider text-textGray mb-1">
               Total Scope 3 Supply Chain Emissions
             </div>
-            <div className="text-2xl md:text-3xl font-bold text-textDark tabular-nums">
+            <div className="text-2xl md:text-3xl font-bold text-white tabular-nums">
               {totalScope3.toFixed(2)}{" "}
               <span className="text-base font-semibold text-textGray">t CO₂e</span>
             </div>
@@ -697,13 +697,13 @@ function SupplyChainTab() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="rounded-2xl border border-accentLime/30 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-sm"
+            className="rounded-2xl border border-accentLime/30 bg-slate-800/60 backdrop-blur-lg p-5 shadow-lg mt-6"
           >
-            <h4 className="text-sm font-semibold text-textDark mb-2 flex items-center gap-2">
+            <h4 className="text-sm font-semibold text-white mb-2 flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-accentLime animate-pulse" />
               AI Supplier Engagement Recommendations
             </h4>
-            <div className="text-xs md:text-sm text-textDark leading-relaxed whitespace-pre-wrap">
+            <div className="text-xs md:text-sm text-white leading-relaxed whitespace-pre-wrap">
               {aiLoading && !aiText ? (
                 <span className="text-textGray italic">Generating recommendations...</span>
               ) : (
@@ -740,14 +740,14 @@ function CsvTab({ onFile, csvPreview, csvError }) {
   const prevent = (e) => e.preventDefault();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 text-white">
       <div
-        className="border-2 border-dashed border-slate-300 rounded-xl p-6 flex flex-col items-center justify-center text-center bg-lightBg/60"
+        className="border-2 border-dashed border-white/20 rounded-xl p-6 flex flex-col items-center justify-center text-center bg-slate-800/30 hover:bg-slate-800/50 transition-colors cursor-pointer"
         onDrop={handleDrop}
         onDragOver={prevent}
         onDragEnter={prevent}
       >
-        <p className="text-sm font-medium text-textDark mb-1">
+        <p className="text-sm font-medium text-white mb-1">
           Drag & drop CSV here
         </p>
         <p className="text-xs text-textGray mb-3">
@@ -774,18 +774,18 @@ function CsvTab({ onFile, csvPreview, csvError }) {
         </div>
       )}
       {csvPreview && csvPreview.length > 0 && (
-        <div className="border border-slate-200 rounded-xl overflow-hidden">
-          <div className="px-3 py-2 text-xs font-medium text-textGray bg-slate-50">
+        <div className="border border-white/10 rounded-xl overflow-hidden bg-slate-900/50 backdrop-blur-md">
+          <div className="px-3 py-2 text-xs font-medium text-slate-300 border-b border-white/10">
             Preview (first 5 rows)
           </div>
           <div className="overflow-auto max-h-60 text-[11px]">
-            <table className="min-w-full border-t border-slate-200">
-              <thead className="bg-slate-50">
+            <table className="min-w-full">
+              <thead>
                 <tr>
                   {Object.keys(csvPreview[0]).map((key) => (
                     <th
                       key={key}
-                      className="px-2 py-1 text-left font-medium text-textGray border-b border-slate-200"
+                      className="px-2 py-1 text-left font-medium text-slate-400 border-b border-white/10"
                     >
                       {key}
                     </th>
@@ -794,11 +794,11 @@ function CsvTab({ onFile, csvPreview, csvError }) {
               </thead>
               <tbody>
                 {csvPreview.map((row, idx) => (
-                  <tr key={idx} className="even:bg-slate-50/40">
+                  <tr key={idx} className="even:bg-slate-800/30">
                     {Object.keys(csvPreview[0]).map((key) => (
                       <td
                         key={key}
-                        className="px-2 py-1 border-b border-slate-100 text-textDark"
+                        className="px-2 py-1 border-b border-white/10 text-white"
                       >
                         {row[key]}
                       </td>
