@@ -8,6 +8,7 @@ import {
 } from "recharts";
 import { useAppContext } from "../context";
 import { analyzeCompetitors, generateCompetitiveReport } from "../utils/geminiAPI";
+import logoImg from "../assets/logo.png";
 
 /* ═══════════════════════════════════════════════
    Design Tokens & Helpers
@@ -258,23 +259,51 @@ export default function CompetitiveIntelligence() {
 
   useEffect(() => () => clearInterval(typewriterRef.current), []);
 
-  const downloadReportPdf = () => {
-    const doc = new jsPDF();
+  const downloadReportPdf = async () => {
+    const doc = new jsPDF("p", "pt");
+    
+    // Load logo image for the PDF
+    const imgElement = new Image();
+    imgElement.src = logoImg;
+    await new Promise((resolve, reject) => {
+      imgElement.onload = resolve;
+      imgElement.onerror = reject;
+    });
+
+    // Medium Logo Variant header
+    doc.addImage(imgElement, "PNG", 40, 30, 40, 40);
+    
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(20);
+    doc.setFontSize(22);
+    doc.setTextColor("#1A2E1A");
+    doc.text("Carbon", 92, 52);
+    const textWidth = doc.getTextWidth("Carbon");
+    doc.setTextColor("#97BC62");
+    doc.text("IQ", 92 + textWidth + 1, 52);
+
+    doc.setFontSize(10);
+    doc.setTextColor("#64748B");
+    doc.text("AI CARBON ANALYTICS", 92, 66);
+
+    doc.setDrawColor("#2C5F2D");
+    doc.setLineWidth(1);
+    doc.line(40, 84, 555, 84);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
     doc.setTextColor(26, 46, 26);
-    doc.text("AI Competitive Intelligence Report", 20, 20);
+    doc.text("AI Competitive Intelligence Report", 40, 120);
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 116, 139);
-    doc.text(`Generated exactly for ${company.name || "Your Company"} | ${new Date().toLocaleDateString()}`, 20, 28);
+    doc.text(`Generated exactly for ${company.name || "Your Company"} | ${new Date().toLocaleDateString()}`, 40, 138);
 
     doc.setFontSize(11);
     doc.setTextColor(51, 65, 85);
     
-    const splitText = doc.splitTextToSize(aiReportText || "No report generated yet.", 170);
-    doc.text(splitText, 20, 40);
+    const splitText = doc.splitTextToSize(aiReportText || "No report generated yet.", 515);
+    doc.text(splitText, 40, 160);
 
     doc.save("Competitive_Intelligence_Report.pdf");
     flash("PDF Downloaded! 📄");

@@ -57,9 +57,14 @@ export function AIInsights() {
     };
   }, [hasData, emissions, company]);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!insights) return;
-    generateCarbonReportPDF(company, emissions, insights);
+    try {
+      await generateCarbonReportPDF(company, emissions, insights);
+    } catch (err) {
+      console.error("Failed to generate PDF", err);
+      alert(`Failed to generate PDF: ${err.message || err}\nCheck the console for more details.`);
+    }
   };
 
   // Aggregate carbon by operation type for the bar chart
@@ -127,9 +132,42 @@ export function AIInsights() {
         </div>
       )}
 
-      {insights && (
-        <>
-          <div className="grid lg:grid-cols-3 gap-4">
+      {(() => {
+        if (!insights) return null;
+
+        let parsedRoadmap = [];
+        let roadmapParseError = false;
+
+        if (insights?.roadmap) {
+          if (typeof insights.roadmap === 'string') {
+            try {
+              const clean = insights.roadmap.replace(/```json|```/g, "").trim();
+              parsedRoadmap = JSON.parse(clean);
+            } catch (err) {
+              console.error("Failed to parse roadmap string:", insights.roadmap, err);
+              roadmapParseError = true;
+            }
+          } else if (Array.isArray(insights.roadmap)) {
+            parsedRoadmap = insights.roadmap;
+          } else {
+            console.error("Unexpected roadmap format:", insights.roadmap);
+            roadmapParseError = true;
+          }
+        }
+
+        const hasRoadmap = parsedRoadmap && parsedRoadmap.length > 0;
+        let totalSaving = 0;
+        let totalCost = 0;
+        if (hasRoadmap) {
+          parsedRoadmap.forEach((r) => {
+            totalSaving += Number(r.savingTonnes) || 0;
+            totalCost += Number(r.costUSD) || 0;
+          });
+        }
+
+        return (
+          <>
+            <div className="grid lg:grid-cols-3 gap-4">
             <motion.div
               className="lg:col-span-2 card-premium p-4"
               initial={{ opacity: 0, y: 16 }}
@@ -144,35 +182,82 @@ export function AIInsights() {
                 Each milestone combines abatement potential, cost and
                 implementation difficulty.
               </p>
-              <div className="space-y-4">
-                {insights.roadmap?.map((step) => (
-                  <div
-                    key={step.month}
-                    className="flex items-start gap-3 text-xs md:text-sm"
-                  >
-                    <div className="flex flex-col items-center mr-1">
-                      <div className="h-8 w-8 rounded-full bg-accentLime/15 border border-accentLime/40 flex items-center justify-center text-[11px] font-semibold text-primaryDark">
-                        M{step.month}
+              {roadmapParseError || !hasRoadmap ? (
+                <div className="text-danger text-sm p-4 bg-danger/5 rounded-xl border border-danger/20">
+                  Unable to generate roadmap — please try again
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {parsedRoadmap.map((step, idx) => {
+                    const diffColor = step.difficulty === 'Easy' 
+                      ? 'bg-good/10 text-good border-good/20' 
+                      : step.difficulty === 'Medium' 
+                        ? 'bg-warning/10 text-warning border-warning/20' 
+                        : 'bg-danger/10 text-danger border-danger/20';
+                    return (
+                      <div
+                        key={idx}
+                        className="flex items-start gap-3 text-xs md:text-sm"
+                      >
+                        <div className="flex flex-col items-center mr-1">
+                          <div className="h-8 w-8 rounded-full bg-accentLime/15 border border-accentLime/40 flex items-center justify-center text-[12px] font-semibold text-primaryDark">
+                            {step.monthNumber || step.month || idx + 1}
+                          </div>
+                          {idx < parsedRoadmap.length - 1 && (
+                            <div className="flex-1 w-px bg-slate-200 mt-1" />
+                          )}
+                        </div>
+                        <div className="flex-1 pb-2">
+                          <div className="text-[10px] font-bold text-accentLime uppercase tracking-wide mb-0.5">
+                            {step.monthName}
+                          </div>
+                          <div className="text-[14px] font-bold text-textDark">
+                            {step.actionTitle || step.action}
+                          </div>
+                          <div className="text-[12px] text-textGray mt-1 mb-2">
+                            {step.actionDescription || step.description}
+                          </div>
+                          <div className="flex flex-wrap gap-2 text-[10px] font-medium">
+                            <span className="px-2 py-0.5 rounded-full bg-good/10 text-good border border-good/20">
+                              {step.savingTonnes} t CO₂e
+                            </span>
+                            <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                              ${Number(step.costUSD).toLocaleString()}
+                            </span>
+                            <span className={`px-2 py-0.5 rounded-full border ${diffColor}`}>
+                              {step.difficulty}
+                            </span>
+                            {step.responsibleArea && (
+                              <span className="px-2 py-0.5 rounded-full bg-primaryDark/5 text-primaryDark border border-primaryDark/10">
+                                {step.responsibleArea}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      {step.month < insights.roadmap.length && (
-                        <div className="flex-1 w-px bg-slate-200 mt-1" />
-                      )}
+                    );
+                  })}
+                  
+                  {/* Summary Row */}
+                  <div className="mt-6 pt-4 border-t border-slate-200">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <div className="text-[11px] text-textGray uppercase tracking-wider font-semibold mb-1">Total Projected Saving</div>
+                        <div className="text-2xl font-bold text-good">{totalSaving.toLocaleString()} t CO₂e</div>
+                      </div>
+                      <div>
+                        <div className="text-[11px] text-textGray uppercase tracking-wider font-semibold mb-1">Total Estimated Cost</div>
+                        <div className="text-xl font-bold text-textDark">${totalCost.toLocaleString()}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-semibold text-textDark">
-                        {step.action}
+                    {(emissions.totalTonnes || emissions.total) > 0 && (
+                      <div className="mt-3 text-sm font-medium text-textDark bg-accentLime/10 p-3 rounded-lg border border-accentLime/20">
+                        Implementing all 12 actions reduces your footprint by <span className="text-good font-bold">{Math.round((totalSaving / (emissions.totalTonnes || emissions.total)) * 100)}%</span>
                       </div>
-                      <div className="text-[11px] text-textGray mt-0.5">
-                        Saving:{" "}
-                        <span className="font-semibold text-good">
-                          {step.saving_tonnes} t CO₂e
-                        </span>{" "}
-                        • Cost: {step.cost} • Difficulty: {step.difficulty}
-                      </div>
-                    </div>
+                    )}
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
             </motion.div>
             <div className="space-y-4">
               <motion.div
@@ -196,7 +281,7 @@ export function AIInsights() {
                           {idx + 1}. {rec.title}
                         </div>
                         <div className="text-[10px] text-good font-semibold">
-                          {rec.saving_tonnes} t • ${rec.cost_saving}
+                          {rec.savingTonnes || rec.saving_tonnes} t • ${Number(rec.costSavingUSD || rec.cost_saving).toLocaleString()}
                         </div>
                       </div>
                       <p className="text-[11px] text-textGray">
@@ -245,8 +330,9 @@ export function AIInsights() {
               {insights.industry_benchmark_analysis}
             </p>
           </motion.div>
-        </>
-      )}
+          </>
+        );
+      })()}
 
       {/* ═══════════════════════════════════════════════════════════
           🤖 Carbon Cost of This Analysis

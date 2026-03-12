@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAppContext } from "../context";
+import Logo from "./Logo";
 
 const navItems = [
   { to: "/onboarding", label: "Overview" },
@@ -20,18 +21,8 @@ export function Sidebar() {
   return (
     <aside className="bg-primaryDark text-white w-64 flex-shrink-0 hidden md:flex flex-col justify-between min-h-screen shadow-xl">
       <div>
-        <div className="px-6 py-6 flex items-center gap-3 border-b border-forest/60">
-          <div className="h-9 w-9 rounded-2xl bg-gradient-to-br from-accentLime/90 to-emerald-400 flex items-center justify-center text-primaryDark font-bold shadow-lg">
-            CQ
-          </div>
-          <div>
-            <div className="text-lg font-semibold tracking-tight">
-              CarbonIQ
-            </div>
-            <div className="text-xs text-accentLime/80">
-              AI Carbon Analytics
-            </div>
-          </div>
+        <div className="px-6 py-6 border-b border-forest/60">
+          <Logo size="small" />
         </div>
 
         <nav className="mt-4 px-3 space-y-1">

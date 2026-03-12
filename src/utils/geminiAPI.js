@@ -37,8 +37,8 @@ export async function analyzeEmissions(emissionsData, companyInfo) {
   
   Respond ONLY with valid JSON in this exact format:
   {
-    "roadmap": [array of 6 monthly actions with month, action, saving_tonnes, cost, difficulty],
-    "top3_recommendations": [array of 3 objects with title, description, saving_tonnes, cost_saving],
+    "roadmap": "Generate a 12-month carbon reduction roadmap. Return ONLY a valid JSON array with exactly 12 objects. Each object must have these exact keys: monthNumber (integer 1-12), monthName (string like January), actionTitle (string, max 8 words), actionDescription (string, 1-2 sentences), savingTonnes (number, not string), costUSD (number, not string), difficulty (exactly one of: Easy, Medium, Hard), responsibleArea (string like Operations or IT or Facilities). Do not include any text before or after the JSON array.",
+    "top3_recommendations": [array of 3 objects with title, description, savingTonnes (number), costSavingUSD (number)],
     "industry_benchmark_analysis": "2-3 sentence analysis",
     "risk_score": "High or Medium or Low",
     "risk_explanation": "1-2 sentence explanation"
@@ -49,25 +49,8 @@ export async function analyzeEmissions(emissionsData, companyInfo) {
       const clean = text.replace(/```json|```/g, "").trim();
       return JSON.parse(clean);
     } catch (error) {
-      console.warn("Gemini API failed, returning mock roadmap data.");
-      return {
-        roadmap: [
-          { month: "M1", action: "Switch to 100% renewable energy tariff for main office", saving_tonnes: 120, cost: "$$", difficulty: "Low" },
-          { month: "M2", action: "Conduct energy efficiency audit of all facilities", saving_tonnes: 45, cost: "$", difficulty: "Low" },
-          { month: "M3", action: "Upgrade HVAC systems to high-efficiency models", saving_tonnes: 85, cost: "$$$", difficulty: "Medium" },
-          { month: "M4", action: "Implement hybrid work policy to reduce commuting", saving_tonnes: 60, cost: "Free", difficulty: "Medium" },
-          { month: "M5", action: "Transition 25% of corporate fleet to EVs", saving_tonnes: 150, cost: "$$$", difficulty: "High" },
-          { month: "M6", action: "Engage top 10 suppliers on carbon reduction targets", saving_tonnes: 300, cost: "$", difficulty: "High" }
-        ],
-        top3_recommendations: [
-          { title: "Renewable Energy Transition", description: "Immediate shift to green tariffs across all sites.", saving_tonnes: 120, cost_saving: "$5k/yr" },
-          { title: "Fleet Electrification", description: "Begin phasing out combustion engine vehicles.", saving_tonnes: 150, cost_saving: "$12k/yr" },
-          { title: "Supplier Engagement", description: "Tackle Scope 3 by working with key vendors.", saving_tonnes: 300, cost_saving: "$0" }
-        ],
-        industry_benchmark_analysis: "Your emissions profile aligns closely with industry medians. However, there is significant opportunity to reduce Scope 2 emissions through immediate renewable energy procurement.",
-        risk_score: "Medium",
-        risk_explanation: "Upcoming regulatory changes in your jurisdiction may introduce carbon pricing, creating moderate financial exposure if current trajectories continue."
-      };
+      console.error("Gemini API failed:", error);
+      throw error;
     }
   });
 }
@@ -83,17 +66,8 @@ export async function extractDataFromText(text) {
       const clean = raw.replace(/```json|```/g, "").trim();
       return JSON.parse(clean);
     } catch (error) {
-      console.warn("Gemini API failed, returning mock extracted data.");
-      return {
-        electricityKwh: 45000,
-        gasM3: 1200,
-        flightHours: 200,
-        carKm: 85000,
-        commutingKmPerDay: 0,
-        landfillKg: 9600,
-        recycledKg: 4800,
-        waterLiters: 0
-      };
+      console.error("Gemini API failed:", error);
+      throw error;
     }
   });
 }
@@ -117,12 +91,8 @@ Based on the highest-emission categories, provide exactly 3 specific, actionable
       const result = await model.generateContent(prompt);
       return result.response.text();
     } catch (error) {
-      console.warn("Gemini API failed, returning mock supply chain analysis.");
-      return `1. IT Equipment & Software: Enforce strict EPEAT Gold and Energy Star 8.0 procurement standards for all new hardware purchases globally. Require major IT vendors to provide product carbon footprint (PCF) data before contract renewal. Estimated reduction: 15% within 12 months.
-
-2. Business Travel & Hotels: Implement a 'Rail First' policy for journeys under 400 miles and mandate bookings with hotel chains demonstrating SBTI-aligned net-zero commitments. Use travel management software to surface carbon budgets at the point of booking. Estimated reduction: 25% within 6 months.
-
-3. Logistics & Freight: Transition 20% of last-mile delivery to electric vehicles or cargo bikes in urban areas by partnering with specialized green logistics providers. Consolidate shipments to reduce overall trip volume. Estimated reduction: 12% within 18 months.`;
+      console.error("Gemini API failed:", error);
+      throw error;
     }
   });
 }
@@ -148,8 +118,8 @@ Be specific, data-driven, and actionable. Keep responses concise and helpful.`;
       const result = await chat.sendMessage(`${systemContext}\n\nUser: ${last.content}`);
       return result.response.text();
     } catch (error) {
-      console.warn("Gemini API failed, returning mock chat response.");
-      return "I'm currently operating in Mock Mode as the AI service is unavailable. However, looking at your data, addressing your Scope 3 emissions (which are typically 70% of a company's footprint) should be your primary focus right now. Let me know if you'd like to explore supplier engagement strategies!";
+      console.error("Gemini API failed:", error);
+      throw error;
     }
   });
 }
@@ -165,25 +135,8 @@ export async function analyzeCompetitors(competitorNames) {
       const clean = text.replace(/```json|```/g, "").trim();
       return JSON.parse(clean);
     } catch (error) {
-      console.warn("Gemini API failed, returning mock competitor data.");
-      return competitorNames.map((name, index) => {
-        const base = 80000 + (Math.random() * 50000 * (index % 2 === 0 ? 1 : -1));
-        return {
-          companyName: name,
-          employeeCount: 45000 + Math.floor(Math.random() * 20000),
-          scope1Tonnes: base * 0.1,
-          scope2Tonnes: base * 0.2,
-          scope3Tonnes: base * 0.7,
-          totalTonnes: base,
-          reportingYear: "2023",
-          reductionTarget: "Net Zero by 2040",
-          carbonNeutralBy: "2040",
-          esgRating: ["AA", "A", "BBB"][Math.floor(Math.random() * 3)],
-          topInitiatives: ["Renewable Energy PPA", "Fleet Electrification", "Supplier Code of Conduct"],
-          dataConfidence: "Medium",
-          dataSource: "Mock CDP Disclosure Database"
-        };
-      });
+      console.error("Gemini API failed:", error);
+      throw error;
     }
   });
 }
@@ -209,27 +162,8 @@ Format the response with bold section headings, normal body text, and bullet poi
       const result = await model.generateContent(prompt);
       return result.response.text();
     } catch (error) {
-      console.warn("Gemini API failed, returning mock competitive report.");
-      return `Competitive Intelligence Executive Summary
-
-Leader Analysis
-Based on the current emissions trajectory and ESG ratings, the sector leader has successfully decoupled revenue growth from absolute emissions growth primarily through aggressive Scope 2 renewable energy procurement and stringent Scope 3 supplier criteria.
-
-Your Competitive Advantages
-• Data Transparency: Your internal data resolution is exceptionally high, building foundational trust.
-• Operational Efficiency: Your Scope 1 and 2 emissions per employee are highly competitive against the peer median.
-
-Vulnerabilities
-• Supply Chain Exposure: Competitors are moving faster to mandate carbon reporting from their tier 1 suppliers, leaving your organization exposed to emerging Scope 3 regulations.
-• Ambition Gap: Several peers have committed to specific Net Zero dates, whereas your public targets remain relatively conservative.
-
-Priority Corrective Actions
-1. Publish a science-based Net Zero target date.
-2. Implement a supplier carbon-reporting mandate.
-3. Accelerate global facility transitions to 100% renewable energy tariffs.
-
-Emerging Industry Trends
-The sector is rapidly shifting from voluntary disclosure to mandatory compliance, with leaders aggressively adopting internal carbon pricing models to drive business unit accountability.`;
+      console.error("Gemini API failed:", error);
+      throw error;
     }
   });
 }
@@ -245,28 +179,8 @@ export async function getInstantSnapshot(companyName) {
       const clean = text.replace(/```json|```/g, "").trim();
       return JSON.parse(clean);
     } catch (error) {
-      console.warn("Gemini API failed, returning mock snapshot.");
-      return {
-        companyName: companyName,
-        industry: "Technology",
-        employeeCount: 5200,
-        country: "United States",
-        scope1Tonnes: 12000,
-        scope2Tonnes: 45000,
-        scope3Tonnes: 180000,
-        totalTonnes: 237000,
-        carbonScore: "B",
-        carbonScoreNumeric: 74,
-        biggestSource: "Purchased Goods & Services",
-        regulatoryRisk: "Medium",
-        applicableRegulations: ["California SB 253", "SEC Climate Disclosure"],
-        estimatedCarbonTaxLiability: 4500000,
-        topCompetitors: ["Competitor A", "Competitor B", "Competitor C"],
-        vsIndustryAverage: "8% below average",
-        singleBiggestAction: "Accelerate the transition of primary data centers to 100% clean energy PPAs.",
-        dataConfidence: "Medium",
-        dataSource: "Mock Public Estimates"
-      };
+      console.error("Gemini API failed:", error);
+      throw error;
     }
   });
 }
@@ -281,17 +195,8 @@ export async function checkCompanyRecognition(companyName) {
       const clean = text.replace(/```json|```/g, "").trim();
       return JSON.parse(clean);
     } catch (error) {
-      console.warn("Gemini API failed, returning mock recognition.");
-      const isKnownMock = companyName.toLowerCase().length > 5; // Fake logic: long names are known
-      return {
-        isKnown: isKnownMock,
-        confidence: isKnownMock ? "High" : "Low",
-        companyFullName: companyName,
-        industry: "Technology",
-        country: "United States",
-        approximateEmployees: isKnownMock ? 10000 : 50,
-        reason: isKnownMock ? "Mock data: Company recognized." : "Mock data: Unknown company."
-      };
+      console.error("Gemini API failed:", error);
+      throw error;
     }
   });
 }
@@ -306,15 +211,8 @@ export async function getIndustryEstimate(companyName) {
       const clean = text.replace(/```json|```/g, "").trim();
       return JSON.parse(clean);
     } catch (error) {
-      console.warn("Gemini API failed, returning mock industry estimate.");
-      return {
-        estimatedIndustry: "Software & IT Services",
-        employeeRangeGuess: "50-200",
-        lowEstimateTonnes: 250,
-        highEstimateTonnes: 1800,
-        typicalBiggestSource: "Purchased Cloud Services (Scope 3) & Electricity",
-        typicalRegulatoryRisk: "Low"
-      };
+      console.error("Gemini API failed:", error);
+      throw error;
     }
   });
 }

@@ -1,33 +1,20 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useAppContext } from "../context";
 import { applyWhatIfAdjustments } from "../utils/calculations";
 import CarbonScoreGauge from "./CarbonScoreGauge";
 
-// Smoothly animate numbers toward a target
-function useAnimatedNumber(target, duration = 500) {
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    const start = performance.now();
-    const from = value;
-    const to = Number.isFinite(target) ? target : 0;
-    let frame;
-
-    const tick = (now) => {
-      const progress = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const next = from + (to - from) * eased;
-      setValue(next);
-      if (progress < 1) frame = requestAnimationFrame(tick);
-    };
-
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [target, duration]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return value;
+/* 
+  Calculates the grade letter and color based on the score
+*/
+function getGradeDetails(score) {
+  if (score >= 81) return { grade: "A", color: "#22C55E" };
+  if (score >= 66) return { grade: "B", color: "#84CC16" };
+  if (score >= 51) return { grade: "C", color: "#F59E0B" };
+  if (score >= 31) return { grade: "D", color: "#F97316" };
+  return { grade: "F", color: "#EF4444" };
 }
+
 export function WhatIfSimulator() {
   const { rawInput, company, emissions } = useAppContext();
   const [sliders, setSliders] = useState({
@@ -53,26 +40,65 @@ export function WhatIfSimulator() {
 
   const adjusted = useMemo(() => {
     try {
-      return applyWhatIfAdjustments(rawInput, sliders, company);
+      // Basic fallback if rawInput doesn't have the fields (e.g. mocked data)
+      // We will adjust based on total scopes if rawInput is missing specific values.
+      let baseTotal = emissions.totalTonnes || 0;
+      let s2 = emissions.scope2 || (baseTotal * 0.3); // fallback 30% scope 2
+      let s3 = emissions.scope3 || (baseTotal * 0.5); // fallback 50% scope 3
+      
+      // Calculate reductions
+      let s2Reduction = s2 * (sliders.electricityReduction / 100);
+      let renewableReduction = (s2 - s2Reduction) * (sliders.renewableIncrease / 100);
+      
+      // Assuming flights are 30% of scope 3, waste is 20% of scope 3
+      let flightReduction = (s3 * 0.3) * (sliders.flightsReduction / 100);
+      let wasteReduction = (s3 * 0.2) * (sliders.wasteRecyclingIncrease / 100);
+      
+      let tonnesSaved = s2Reduction + renewableReduction + flightReduction + wasteReduction;
+      let newTotal = Math.max(0, baseTotal - tonnesSaved);
+      
+      // Recalculate score exactly per instructions
+      let employeesCount = 100;
+      if (company?.employees) {
+        let e = company.employees;
+        if (typeof e === "number") employeesCount = e;
+        else {
+          let map = { "1-50": 25, "51-200": 120, "201-500": 350, "501-2000": 1000, "2000+": 2500 };
+          employeesCount = map[e] || parseInt(e, 10) || 100;
+        }
+      }
+      
+      let industryBenchmarks = {
+        Technology: 8, Manufacturing: 25, Retail: 15, Healthcare: 18, Finance: 6,
+        Education: 10, Logistics: 30, Other: 12
+      };
+      let industryAvg = industryBenchmarks[company?.industry] || 12;
+      
+      let perEmployee = newTotal / employeesCount;
+      let rawScore = 100 - (perEmployee / industryAvg) * 50;
+      let newScore = Math.max(0, Math.min(100, Math.round(rawScore)));
+
+      return {
+        totalTonnes: newTotal,
+        carbonScore: newScore,
+        saved: tonnesSaved
+      };
     } catch {
-      return emissions;
+      return {
+        totalTonnes: emissions.totalTonnes || 0,
+        carbonScore: emissions.carbonScore || 0,
+        saved: 0
+      };
     }
-  }, [rawInput, sliders, company, emissions]);
+  }, [sliders, company, emissions]);
 
   const baseTotal = emissions.totalTonnes || 0;
-  const adjustedTotal = adjusted.totalTonnes || 0;
-  const saved = Math.max(0, baseTotal - adjustedTotal);
-  const carbonPrice = 50;
-  const costSaving = saved * carbonPrice;
+  const currentScore = emissions.carbonScore ? Math.round(emissions.carbonScore) : 0;
+  
+  const currentGrade = getGradeDetails(currentScore);
+  const projectedGrade = getGradeDetails(adjusted.carbonScore);
 
-  // Animated metrics
-  const animatedTotal = useAnimatedNumber(adjustedTotal);
-  const animatedSaved = useAnimatedNumber(saved);
-  const animatedCost = useAnimatedNumber(costSaving);
-  const animatedScore = useAnimatedNumber(adjusted.carbonScore || 0);
-
-  // Highlight the main saving metric when there is any saving
-  const highlightSavings = saved > 0;
+  const costSaving = adjusted.saved * 50;
 
   return (
     <motion.div
@@ -82,7 +108,7 @@ export function WhatIfSimulator() {
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
-      <div className="flex items-center justify-between mb-4 gap-3">
+      <div className="flex items-center justify-between mb-6 gap-3">
         <div>
           <h2 className="text-base md:text-lg font-semibold text-textDark">
             🎮 What-If Scenario Simulator
@@ -99,13 +125,14 @@ export function WhatIfSimulator() {
           Reset scenario
         </button>
       </div>
-      <div className="grid md:grid-cols-5 gap-6">
-        <div className="space-y-4 md:col-span-3">
+      
+      <div className="grid md:grid-cols-5 gap-8 mb-8">
+        <div className="space-y-6 md:col-span-3">
           <Slider
             label="Reduce electricity consumption"
             suffix="%"
             value={sliders.electricityReduction}
-            max={50}
+            max={100}
             onChange={handleChange("electricityReduction")}
           />
           <Slider
@@ -130,48 +157,52 @@ export function WhatIfSimulator() {
             onChange={handleChange("wasteRecyclingIncrease")}
           />
         </div>
-        <div className="md:col-span-2 flex flex-col gap-4 justify-center">
-          <div className="flex justify-center">
-            <CarbonScoreGauge score={animatedScore} />
-          </div>
-          <div className="grid grid-cols-2 gap-3 text-xs md:text-sm">
-            <StatCard
-              label="New total emissions"
-              value={
-                Number.isFinite(animatedTotal)
-                  ? `${animatedTotal.toFixed(1)} t CO₂e`
-                  : "—"
-              }
-            />
-            <StatCard
-              label="Tonnes saved vs current"
-              value={`${animatedSaved.toFixed(1)} t`}
-              positive
-              highlight={highlightSavings}
-            />
-            <StatCard
-              label="Estimated annual cost savings"
-              value={
-                Number.isFinite(animatedCost)
-                  ? `$${animatedCost.toLocaleString(undefined, {
-                      maximumFractionDigits: 0,
-                    })}`
-                  : "—"
-              }
-              positive
-              highlight={highlightSavings}
-            />
-            <StatCard
-              label="New CarbonIQ score"
-              value={
-                animatedScore
-                  ? `${Math.round(animatedScore)}/100`
-                  : "—"
-              }
-            />
-          </div>
+        
+        <div className="md:col-span-2 flex justify-center items-center">
+          <CarbonScoreGauge score={adjusted.carbonScore} />
         </div>
       </div>
+
+      {/* Projected Outcome Row */}
+      <div className="rounded-2xl p-4 border border-[#84CC16] bg-[#E8F5E1] shadow-sm">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          
+          <div className="flex items-center gap-3">
+            <div className="flex flex-col">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">New Total CO₂e</span>
+              <span className="text-xl font-extrabold text-[#1A2E1A]">{adjusted.totalTonnes.toLocaleString(undefined, {maximumFractionDigits: 1})} t</span>
+            </div>
+            <div className="w-px h-8 bg-[#84CC16]/30 mx-2 hidden md:block"></div>
+            
+            <div className="flex flex-col">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Tonnes Saved</span>
+              <span className="text-xl font-extrabold text-[#059669]">{adjusted.saved.toLocaleString(undefined, {maximumFractionDigits: 1})} t</span>
+            </div>
+            <div className="w-px h-8 bg-[#84CC16]/30 mx-2 hidden md:block"></div>
+            
+            <div className="flex flex-col">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Cost Savings</span>
+              <span className="text-xl font-extrabold text-[#D97706]">${costSaving.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-xl shadow-sm border border-white/50">
+            <div className="text-sm font-bold text-slate-600">
+              Current: <span style={{color: currentGrade.color}}>{currentGrade.grade} {currentScore}</span>
+            </div>
+            
+            <div className="text-[#059669] font-black text-lg">→</div>
+            
+            <div className="text-sm font-bold text-slate-800">
+              Projected: <span className="px-2 py-0.5 rounded-md text-white ml-1 shadow-sm" style={{backgroundColor: projectedGrade.color}}>
+                {projectedGrade.grade} {adjusted.carbonScore}
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </motion.div>
   );
 }
@@ -180,10 +211,9 @@ function Slider({ label, value, max, suffix, onChange }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-1">
-        <div className="text-xs font-medium text-textDark">{label}</div>
-        <div className="text-xs text-accentLime font-semibold">
-          {value}
-          {suffix}
+        <div className="text-sm font-semibold text-textDark">{label}</div>
+        <div className="text-sm text-accentLime font-bold">
+          {value}{suffix}
         </div>
       </div>
       <input
@@ -192,39 +222,18 @@ function Slider({ label, value, max, suffix, onChange }) {
         max={max}
         value={value}
         onChange={onChange}
-        className="slider-premium"
+        className="slider-premium w-full mt-2"
+        style={{
+          accentColor: '#84CC16'
+        }}
       />
-      <div className="flex justify-between text-[10px] text-textGray mt-1">
+      <div className="flex justify-between text-[11px] font-medium text-textGray mt-1">
         <span>0{suffix}</span>
-        <span>
-          {max}
-          {suffix}
-        </span>
+        <span>{max}{suffix}</span>
       </div>
     </div>
   );
 }
-function StatCard({ label, value, positive, highlight }) {
-  return (
-    <div
-      className={`rounded-xl px-3 py-2 border bg-lightBg transition-colors ${
-        highlight
-          ? "border-amber-300 bg-amber-50 shadow-[0_0_0_1px_rgba(250,204,21,0.4)]"
-          : "border-slate-200"
-      }`}
-    >
-      <div className="text-[11px] text-textGray mb-0.5">{label}</div>
-      <div
-        className={`text-xs font-semibold ${
-          positive ? "text-good" : "text-textDark"
-        }`}
-      >
-        {value}
-      </div>
-    </div>
-  );
-}
-
 
 export default WhatIfSimulator;
 

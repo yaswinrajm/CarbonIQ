@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "qrcode";
 import { useAppContext } from "../context";
 import { chatWithData } from "../utils/geminiAPI";
+import Logo from "../components/Logo";
 
 /* ═══════════════════════════════════════════════
    Constants
@@ -166,7 +167,7 @@ export default function PublicPage() {
 
       {/* Page header */}
       <div>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: "#2C5F2D" }}>CARBONIQ</p>
+        <Logo size="medium" className="mb-6" />
         <h1 style={{ fontSize: 20, fontWeight: 800, color: "#1A2E1A" }}>🌍 Public Sustainability Page</h1>
       </div>
 
@@ -412,9 +413,8 @@ export default function PublicPage() {
 
                 {/* Footer */}
                 <div style={{ background: "#1A2E1A", padding: "14px 28px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{ width: 22, height: 22, borderRadius: 6, background: "linear-gradient(135deg, #97BC62, #4A8C4B)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 800, color: "#1A2E1A" }}>CQ</div>
-                    <span style={{ fontSize: 10, color: "#97BC62", fontWeight: 600 }}>CarbonIQ</span>
+                  <div style={{ transform: "scale(0.8)", transformOrigin: "left center" }}>
+                    <Logo size="small" />
                   </div>
                   <span style={{ fontSize: 9, color: "#94a3b8" }}>Carbon data verified by CarbonIQ</span>
                   <span style={{ fontSize: 9, color: "#94a3b8" }}>{new Date().toLocaleDateString()}</span>

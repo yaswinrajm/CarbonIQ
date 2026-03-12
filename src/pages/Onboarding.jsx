@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAppContext } from "../context";
+import Logo from "../components/Logo";
 
 const INDUSTRIES = [
   "Technology",
@@ -53,6 +54,7 @@ export function Onboarding() {
       <div className="max-w-3xl w-full bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden grid md:grid-cols-2">
         <div className="bg-primaryDark text-white p-8 flex flex-col justify-between">
           <div>
+            <Logo size="large" className="self-start mb-8" />
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest/70 text-xs mb-4">
               <span className="h-2 w-2 rounded-full bg-accentLime animate-pulse" />
               <span>Hackathon Edition</span>

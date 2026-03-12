@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { useAppContext } from "../context";
 import { getInstantSnapshot, checkCompanyRecognition, getIndustryEstimate } from "../utils/geminiAPI";
+import Logo from "../components/Logo";
 
 /* ═══════════════════════════════════════════════
    Helpers
@@ -167,11 +168,9 @@ export default function CarbonSnapshot() {
         position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000, overflowY: "auto"
       }}>
         <div style={{ maxWidth: 700, width: "100%", margin: "auto" }}>
-          
           {/* Logo */}
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 40 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg, #97BC62, #4A8C4B)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, color: "#1A2E1A" }}>CQ</div>
-            <span style={{ color: "#97BC62", fontSize: 16, fontWeight: 700 }}>🌱 CarbonIQ</span>
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} style={{ display: "flex", justifyContent: "center", marginBottom: 40 }}>
+            <Logo size="large" />
           </motion.div>
 
           {/* Heading */}
@@ -266,9 +265,9 @@ export default function CarbonSnapshot() {
     return (
       <div style={{ minHeight: "100vh", background: "#1A2E1A", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 40, position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000 }}>
         {/* Pulsing logo */}
-        <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 1.8 }}
-          style={{ width: 72, height: 72, borderRadius: 18, background: "linear-gradient(135deg, #97BC62, #4A8C4B)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, fontWeight: 800, color: "#1A2E1A", marginBottom: 40, boxShadow: "0 0 40px rgba(151,188,98,0.4)" }}
-        >CQ</motion.div>
+        <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ repeat: Infinity, duration: 2.5 }} style={{ marginBottom: 40 }}>
+          <Logo size="large" />
+        </motion.div>
         {/* Step text */}
         <AnimatePresence mode="wait">
           <motion.div key={loadingMessage} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.35 }} style={{ color: "#fff", fontSize: 18, fontWeight: 600, textAlign: "center", minHeight: 30 }}>
